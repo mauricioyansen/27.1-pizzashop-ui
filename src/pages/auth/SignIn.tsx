@@ -1,11 +1,50 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router";
+import { toast } from "sonner";
+import { z } from "zod";
+
+const signInForm = z.object({
+  email: z.string().email(),
+});
+
+type SignInFormType = z.infer<typeof signInForm>;
 
 export function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<SignInFormType>();
+
+  async function handleSignIn(data: SignInFormType) {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      toast.success("Enviamos um link de autenticação seu email", {
+        action: {
+          label: "Reenviar",
+          onClick: () => {
+            handleSignIn(data);
+          },
+        },
+      });
+    } catch (error) {
+      toast.error("Credencias inválidas");
+    }
+  }
+
   return (
     <>
       <div className="p-8">
+        <Button variant={"ghost"} asChild className="absolute right-8 top-8">
+          <Link to="/signup">
+            Novo estabelecimento
+          </Link>
+        </Button>
+
         <div className="w-[350px] flex flex-col justify-center gap-6">
           <div className="flex flex-col gap-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -16,13 +55,13 @@ export function SignIn() {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Seu e-mail</Label>
-              <Input id="email" type="email" />
+              <Input id="email" type="email" {...register("email")} />
             </div>
 
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" disabled={isSubmitting}>
               Acessar painel
             </Button>
           </form>
