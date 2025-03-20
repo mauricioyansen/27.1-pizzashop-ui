@@ -1,11 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { TableCell, TableRow } from "@/components/ui/table";
-
 import { Search, ArrowRight, X } from "lucide-react";
 import { OrderDetails } from "./order-details";
+import { OrderStatus } from "@/components/order-status";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-export function OrderTableRow() {
+export interface OrdersTableRowProps {
+  order: {
+    orderId: string;
+    createdAt: string;
+    status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
+    customName: string;
+    total: number;
+  };
+}
+
+export function OrderTableRow({ order }: OrdersTableRowProps) {
   return (
     <TableRow>
       <TableCell>
@@ -21,17 +33,24 @@ export function OrderTableRow() {
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">
-        5a6b5c85d8e4f7a
+        {order.orderId}
       </TableCell>
-      <TableCell className="text-muted-foreground">há 15 minutos</TableCell>
+      <TableCell className="text-muted-foreground">
+        {formatDistanceToNow(order.createdAt, {
+          locale: ptBR,
+          addSuffix: true,
+        })}
+      </TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-slate-400" />
-          <span className="font-medium text-muted-foreground">Pendente</span>
-        </div>
+        <OrderStatus status={order.status} />
       </TableCell>
-      <TableCell className="font-medium">Mauricio Yansen</TableCell>
-      <TableCell className="font-medium">R$ 149,90</TableCell>
+      <TableCell className="font-medium">{order.customName}</TableCell>
+      <TableCell className="font-medium">
+        {order.total.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        })}
+      </TableCell>
       <TableCell>
         <Button variant={"outline"} size={"sm"}>
           <ArrowRight className="size-3 mr-2" />
