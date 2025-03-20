@@ -12,7 +12,7 @@ export interface OrdersTableRowProps {
     orderId: string;
     createdAt: string;
     status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
-    customName: string;
+    customerName: string;
     total: number;
   };
 }
@@ -44,7 +44,7 @@ export function OrderTableRow({ order }: OrdersTableRowProps) {
       <TableCell>
         <OrderStatus status={order.status} />
       </TableCell>
-      <TableCell className="font-medium">{order.customName}</TableCell>
+      <TableCell className="font-medium">{order.customerName}</TableCell>
       <TableCell className="font-medium">
         {order.total.toLocaleString("pt-BR", {
           style: "currency",

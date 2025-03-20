@@ -2,6 +2,9 @@ import { api } from "@/lib/axios";
 
 export interface GetOrdersQuery {
   pageIndex?: number | null;
+  orderId?: string | null;
+  customerName?: string | null;
+  status?: string | null;
 }
 
 export interface GetOrdersResponse {
@@ -9,7 +12,7 @@ export interface GetOrdersResponse {
     orderId: string;
     createdAt: string;
     status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
-    customName: string;
+    customerName: string;
     total: number;
   }[];
   meta: {
@@ -19,10 +22,18 @@ export interface GetOrdersResponse {
   };
 }
 
-export async function getOrders({ pageIndex }: GetOrdersQuery) {
+export async function getOrders({
+  pageIndex,
+  orderId,
+  customerName,
+  status,
+}: GetOrdersQuery) {
   const res = await api.get<GetOrdersResponse>("/orders", {
     params: {
       pageIndex,
+      orderId,
+      customerName,
+      status,
     },
   });
 
