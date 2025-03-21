@@ -20,6 +20,7 @@ import {
   Line,
 } from "recharts";
 import { subDays } from "date-fns";
+import { Loader2 } from "lucide-react";
 
 export function RevenueChart() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -61,7 +62,7 @@ export function RevenueChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {chartData && (
+        {chartData ? (
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={chartData} style={{ fontSize: 12 }}>
               <XAxis dataKey="date" tickLine={false} axisLine={false} dy={16} />
@@ -86,6 +87,10 @@ export function RevenueChart() {
               ></Line>
             </LineChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="flex h-60 w-full items-center justify-center">
+            <Loader2 className="size-8 text-muted-foreground animate-spin" />
+          </div>
         )}
       </CardContent>
     </Card>
